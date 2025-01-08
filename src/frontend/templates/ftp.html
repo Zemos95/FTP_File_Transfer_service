@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FTP Configuration</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>FTP Configuration</h1>
+    </header>
+    <main>
+        <form method="post">
+            <label>FTP Server:</label>
+            <input type="text" name="ftp_server" value="{{ config['ftp_server'] }}">
+
+            <label>Port:</label>
+            <input type="text" name="port" value="{{ config['port'] }}">
+
+            <label>Username:</label>
+            <input type="text" name="username" value="{{ config['username'] }}">
+
+            <label>Password:</label>
+            <input type="password" name="password" value="{{ config['password'] }}">
+
+            <label>Watch Directory (on Raspberry Pi):</label>
+            <input type="text" name="watch_directory" value="{{ config['watch_directory'] }}">
+
+            <label>File Format (e.g., .dat):</label>
+            <input type="text" name="file_format" value="{{ config['file_format'] }}">
+
+            <label>FTP Target Directory:</label>
+            <input type="text" name="ftp_target_directory" value="{{ config['ftp_target_directory'] }}">
+
+            <button type="submit">Save Configuration</button>
+        </form>
+
+        <form action="/ftp/start" method="post">
+            <button type="submit">Start Service</button>
+        </form>
+
+        <form action="/ftp/stop" method="post">
+            <button type="submit">Stop Service</button>
+        </form>
+
+        <a href="/"> Back to Home</a>
+    </main>
+</body>
+</html>
