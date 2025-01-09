@@ -11,7 +11,7 @@ def main() -> None:
     try:
         app = create_app()
         if app is not None:
-            app.run(host=SERVER_CONFIG['host'],port=SERVER_CONFIG['port'])
+            app.run(host=SERVER_CONFIG['host'], port=SERVER_CONFIG['port'])
     except Exception as e:
         print(f"Error: {e}")
         return None

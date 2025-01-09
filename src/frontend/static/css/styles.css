@@ -7,10 +7,34 @@ body {
 }
 
 header {
-    background-color: #007bff;
+    background-color: #0056b3; /* Dunklerer Blauton */
     color: white;
     padding: 10px 20px;
     text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+nav ul li a:hover {
+    color: #ffcc00; /* Goldener Farbton für Hover-Effekt */
 }
 
 main {
@@ -25,6 +49,7 @@ main {
 h1 {
     font-size: 24px;
     margin-bottom: 10px;
+    color: #0056b3; /* Dunklerer Blauton */
 }
 
 form {
@@ -33,45 +58,53 @@ form {
 
 form label {
     display: block;
-    margin-top: 10px;
+    margin-bottom: 5px;
     font-weight: bold;
 }
 
-form input, form button {
+form input[type="text"],
+form input[type="password"] {
     width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
     border-radius: 4px;
-    font-size: 14px;
+    box-sizing: border-box;
 }
 
 form button {
-    background-color: #007bff;
+    background-color: #0056b3; /* Dunklerer Blauton */
     color: white;
+    padding: 10px 20px;
     border: none;
+    border-radius: 4px;
     cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 form button:hover {
-    background-color: #0056b3;
+    background-color: #004494; /* Noch dunklerer Blauton für Hover-Effekt */
 }
 
 .status {
     margin-top: 20px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background-color: #f9f9f9;
 }
 
-a {
+.status p {
+    margin: 5px 0;
+}
+
+.status-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
     display: inline-block;
-    margin-top: 20px;
-    color: #007bff;
-    text-decoration: none;
 }
 
-a:hover {
-    text-decoration: underline;
+.status-online {
+    background-color: green;
+}
+
+.status-offline {
+    background-color: red;
 }

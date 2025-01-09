@@ -1,10 +1,14 @@
 # Import
 import json
+import os
 from pathlib import Path
 from typing import Dict
 
+# Erstellen Sie den Ordner, falls er nicht existiert
+os.makedirs('user_settings', exist_ok=True)
 
-SETTING_PATH = Path('settings.json')
+SETTING_PATH = Path('user_settings/settings.json')
+
 
 def load_settings() -> Dict:
     """
@@ -12,9 +16,8 @@ def load_settings() -> Dict:
 
     Args:
         None
-    
     Returns:
-        Dict: The settings as a dictionary.    
+        Dict: The settings as a dictionary.
     """
     try:
         with open(SETTING_PATH, 'r') as f:
@@ -22,7 +25,8 @@ def load_settings() -> Dict:
         return settings
     except Exception as e:
         print(f"Error: {e}")
-        return None
+        return {}
+
 
 def save_settings(setting: Dict[str, str]) -> None:
     """
@@ -34,3 +38,4 @@ def save_settings(setting: Dict[str, str]) -> None:
     with open(SETTING_PATH, "w") as f:
         json.dump(setting, f, indent=4)
         print("Configuration saved successfully.")
+        return None

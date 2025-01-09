@@ -12,6 +12,7 @@ transferred_files = 0
 upload_speed = 0.0  # in MB/s
 download_speed = 0.0  # in MB/s
 
+
 @home_blueprint.route('/')
 def home():
     """
@@ -21,6 +22,7 @@ def home():
         render_template: The rendered template for the home page.
     """
     return render_template('home.html')
+
 
 @home_blueprint.route('/api/status', methods=['GET'])
 def get_status():

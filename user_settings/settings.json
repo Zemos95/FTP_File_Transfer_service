@@ -1,0 +1,9 @@
+{
+    "ftp_server": "90.187.43.101",
+    "port": 22,
+    "username": "M2102505",
+    "password": "n&H%nC",
+    "watch_directory": "/home/nico/Data",
+    "ftp_target_directory": "/FTPServer/Test",
+    "file_format": ".mat"
+}

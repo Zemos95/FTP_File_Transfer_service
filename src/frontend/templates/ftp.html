@@ -1,50 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FTP Configuration</title>
-    <link rel="stylesheet" href="/static/css/styles.css">
-</head>
-<body>
-    <header>
-        <h1>FTP Configuration</h1>
-    </header>
-    <main>
-        <form method="post">
+{% extends "base.html" %}
+
+{% block title %}FTP Configuration - File Transfer Service{% endblock %}
+
+{% block content %}
+    <h1>FTP Configuration</h1>
+    <form method="post">
+        <div class="form-group">
             <label>FTP Server:</label>
-            <input type="text" name="ftp_server" value="{{ config['ftp_server'] }}">
-
+            <input type="text" class="form-control" name="ftp_server" value="{{ config['ftp_server'] }}">
+        </div>
+        <div class="form-group">
             <label>Port:</label>
-            <input type="text" name="port" value="{{ config['port'] }}">
-
+            <input type="text" class="form-control" name="port" value="{{ config['port'] }}">
+        </div>
+        <div class="form-group">
             <label>Username:</label>
-            <input type="text" name="username" value="{{ config['username'] }}">
-
+            <input type="text" class="form-control" name="username" value="{{ config['username'] }}">
+        </div>
+        <div class="form-group">
             <label>Password:</label>
-            <input type="password" name="password" value="{{ config['password'] }}">
-
+            <input type="password" class="form-control" name="password" value="{{ config['password'] }}">
+        </div>
+        <div class="form-group">
             <label>Watch Directory (on Raspberry Pi):</label>
-            <input type="text" name="watch_directory" value="{{ config['watch_directory'] }}">
-
+            <input type="text" class="form-control" name="watch_directory" value="{{ config['watch_directory'] }}">
+        </div>
+        <div class="form-group">
             <label>File Format (e.g., .dat):</label>
-            <input type="text" name="file_format" value="{{ config['file_format'] }}">
-
+            <input type="text" class="form-control" name="file_format" value="{{ config['file_format'] }}">
+        </div>
+        <div class="form-group">
             <label>FTP Target Directory:</label>
-            <input type="text" name="ftp_target_directory" value="{{ config['ftp_target_directory'] }}">
+            <input type="text" class="form-control" name="ftp_target_directory" value="{{ config['ftp_target_directory'] }}">
+        </div>
+        <button type="submit" class="btn btn-primary">Save Configuration</button>
+    </form>
 
-            <button type="submit">Save Configuration</button>
-        </form>
+    <form action="/connect" method="post" class="mt-3">
+        <button type="submit" class="btn btn-info">Connect to FTP Server</button>
+    </form>
 
-        <form action="/ftp/start" method="post">
-            <button type="submit">Start Service</button>
-        </form>
+    <form action="/ftp/start" method="post" class="mt-3">
+        <button type="submit" class="btn btn-success">Start Service</button>
+    </form>
 
-        <form action="/ftp/stop" method="post">
-            <button type="submit">Stop Service</button>
-        </form>
-
-        <a href="/"> Back to Home</a>
-    </main>
-</body>
-</html>
+    <form action="/ftp/stop" method="post" class="mt-3">
+        <button type="submit" class="btn btn-danger">Stop Service</button>
+    </form>
+{% endblock %}

@@ -1,44 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Transfer Service</title>
-    <link rel="stylesheet" href="/static/css/styles.css">
-    <script>
-        async function updateStatus() {
-            try {
-                const response = await fetch('/api/status');
-                const data = await response.json();
+{% extends "base.html" %}
 
-                document.getElementById('server_status').innerText = data.server_status || "Unknown";
-                document.getElementById('observer_running').innerText = data.observer_running ? "Running" : "Stopped";
-                document.getElementById('transferred_files').innerText = data.transferred_files || 0;
-                document.getElementById('upload_speed').innerText = data.upload_speed || "0.00 MB/s";
-                document.getElementById('download_speed').innerText = data.download_speed || "0.00 MB/s";
-            } catch (error) {
-                console.error("Error fetching status:", error);
-            }
-        }
+{% block title %}Home - File Transfer Service{% endblock %}
 
-        // Periodically update the status
-        setInterval(updateStatus, 5000); // Every 5 seconds
-        window.onload = updateStatus;
-    </script>
-</head>
-<body>
-    <header>
-        <h1>File Transfer Service - Status</h1>
-    </header>
-    <main>
-        <div class="status">
-            <p><strong>Server Status:</strong> <span id="server_status">Loading...</span></p>
-            <p><strong>Service Running:</strong> <span id="observer_running">Loading...</span></p>
-            <p><strong>Files Transferred:</strong> <span id="transferred_files">Loading...</span></p>
-            <p><strong>Upload Speed:</strong> <span id="upload_speed">Loading...</span></p>
-            <p><strong>Download Speed:</strong> <span id="download_speed">Loading...</span></p>
-        </div>
-        <a href="/ftp/configuration">Go to FTP Configuration</a>
-    </main>
-</body>
-</html>
+{% block content %}
+    <h1>File Transfer Service - Status</h1>
+    <div class="status">
+        <p><strong>Server Status:</strong> <span id="server_status_text">Loading...</span></p>
+        <p><strong>Service Running:</strong> <span id="observer_running">Loading...</span></p>
+        <p><strong>Files Transferred:</strong> <span id="transferred_files">Loading...</span></p>
+        <p><strong>Upload Speed:</strong> <span id="upload_speed">Loading...</span></p>
+        <p><strong>Download Speed:</strong> <span id="download_speed">Loading...</span></p>
+    </div>
+{% endblock %}
