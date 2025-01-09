@@ -1,9 +1,0 @@
-{
-    "ftp_server": "90.187.00.00",
-    "port": 8000,
-    "username": "Nico",
-    "password": "test",
-    "watch_directory": "/home/nico/Data",
-    "ftp_target_directory": "/home/test/test",
-    "file_format": ".dat"
-}
