@@ -1,50 +1,34 @@
-# Import
-from watchdog.observers import Observer
-from watchdog.observers.api import ObservedWatch
-from watchdog.events import FileSystemEventHandler
-from pathlib import Path
-from typing import Dict, Callable
+import os
 import socket
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
 
 
 class FileHandler(FileSystemEventHandler):
-    """
-    Handles file system events and triggers a callbackl for specific file types
-    """
-    def __init__(self, settings: Dict[str, str], callback: Callable[[Path],
-                                                                    None]):
-        """
-        Initialize the FileHandler, settings, callback.
-        """
+    def __init__(self, settings, callback):
         self.settings = settings
         self.callback = callback
 
     def on_modified(self, event):
-        """
-        Trigger the callback when a file is modified.
-        Args:
-            event: The file system event.
-        """
-        if not event.is_directory and event.src_path.endswith(self.settings['file_format']):
-            self.callback(Path(event.src_path))
+        if not event.is_directory:
+            self.process(event.src_path)
+
+    def on_created(self, event):
+        if not event.is_directory:
+            self.process(event.src_path)
+
+    def process(self, file_path):
+        if file_path.endswith(self.settings['file_format']):
+            self.callback(file_path)
 
 
-def start_monitor(settings: Dict[str, str], callback: Callable[[Path], None]) -> ObservedWatch:
-    """
-    Start monitoring a directory for file changes.
-
-    Args:
-        settings (Dict[str, str]): The settings for the monitoring.
-        callback (Callable[[Path], None]): The callback to trigger when a file is modified.
-
-    Returns:
-        Observer: The observer object.
-    """
+def start_monitor(settings, callback):
     observer = Observer()
     handler = FileHandler(settings, callback)
     observer.schedule(handler, settings['watch_directory'], recursive=True)
     observer.start()
     return observer
+
 
 
 def check_server_status(ftp_server: str) -> str:

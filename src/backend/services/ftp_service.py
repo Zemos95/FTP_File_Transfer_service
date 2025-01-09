@@ -1,6 +1,7 @@
 from pathlib import Path
 from flask import jsonify, make_response
 import paramiko
+import os
 from ..configurations.settings import load_settings
 from ..monitoring.server_status import start_monitor
 
@@ -33,13 +34,18 @@ class FTPService:
             response = jsonify({'message': 'Error connecting to SFTP server.'})
             return make_response(response, 500)
 
+    def login_to_server(self, settings):
+        # Login wird bereits in connect_to_server durchgeführt
+        self.login_status = 'success'
+        response = jsonify({'message': 'Logged in to SFTP server.'})
+        return make_response(response, 200)
+
     def start_transfer(self):
         try:
             settings = load_settings()
         except Exception as e:
             print(f"Error: {e}")
-            response = jsonify(
-                {'message': 'Error loading settings.'})
+            response = jsonify({'message': 'Error loading settings.'})
             return make_response(response, 500)
         if self.observer:
             response = jsonify(
@@ -53,6 +59,7 @@ class FTPService:
                                settings['password'], file_path,
                                settings['ftp_target_directory'])
                 self.transferred_files += 1
+                os.remove(file_path)
             except Exception as e:
                 print(f"Error: {e}")
                 return None
@@ -75,7 +82,8 @@ class FTPService:
         response = jsonify({'message': 'SFTP transfer stopped.'})
         return make_response(response, 200)
 
-    def send_file(self, ftp_server, port, username, password, file_path, target_directory):
+    def send_file(self, ftp_server, port,
+                  username, password, file_path, target_directory):
         try:
             self.sftp.put(file_path, f"{target_directory}/{file_path.name}")
         except Exception as e:
