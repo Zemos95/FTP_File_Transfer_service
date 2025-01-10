@@ -1,50 +1,23 @@
-import os
-import socket
-from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler
+from flask import Blueprint, jsonify
+import requests
 
+status_blueprint = Blueprint('status', __name__)
 
-class FileHandler(FileSystemEventHandler):
-    def __init__(self, settings, callback):
-        self.settings = settings
-        self.callback = callback
-
-    def on_modified(self, event):
-        if not event.is_directory:
-            self.process(event.src_path)
-
-    def on_created(self, event):
-        if not event.is_directory:
-            self.process(event.src_path)
-
-    def process(self, file_path):
-        if file_path.endswith(self.settings['file_format']):
-            self.callback(file_path)
-
-
-def start_monitor(settings, callback):
-    observer = Observer()
-    handler = FileHandler(settings, callback)
-    observer.schedule(handler, settings['watch_directory'], recursive=True)
-    observer.start()
-    return observer
-
-
-
-def check_server_status(ftp_server: str) -> str:
+def start_monitor():
     """
-    Check if the FTP server is online and reachable.
-
-    Args:
-        ftp_server (str): The FTP server address (IP or hostname).
-
-    Returns:
-        str: 'Online' if the server is reachable, otherwise 'Offline'.
+    Startet das Server-Monitoring.
     """
+    # Implementieren Sie hier Ihre Monitoring-Logik
+    print("Server-Monitoring gestartet.")
+
+@status_blueprint.route('/api/status')
+def check_server_status():
     try:
-        host, port = ftp_server.split(":") if ":" in ftp_server else (ftp_server, 21)
-        port = int(port)
-        with socket.create_connection((host, port), timeout=5):
-            return "Online"
-    except (socket.timeout, socket.error) as e:
-        return "Offline"
+        # Beispielhafte Überprüfung des Webservers
+        response = requests.get("http://localhost:5000/")
+        if response.status_code == 200:
+            return jsonify({'server_status': 'online'})
+        else:
+            return jsonify({'server_status': 'offline'})
+    except:
+        return jsonify({'server_status': 'offline'})
