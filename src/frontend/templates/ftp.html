@@ -1,50 +1,46 @@
 {% extends "base.html" %}
 
-{% block title %}FTP Configuration - File Transfer Service{% endblock %}
+{% block title %}FTP Client Configuration{% endblock %}
 
 {% block content %}
-    <h1>FTP Configuration</h1>
-    <form method="post">
+<div class="container mt-4">
+    <h1>FTP Client Configuration</h1>
+    <form method="post" action="{{ url_for('ftp.configure') }}">
         <div class="form-group">
-            <label>FTP Server:</label>
-            <input type="text" class="form-control" name="ftp_server" value="{{ config['ftp_server'] }}">
+            <label for="ftp_server">FTP Server</label>
+            <input type="text" class="form-control" id="ftp_server" name="ftp_server" value="{{ config.ftp_server }}">
         </div>
         <div class="form-group">
-            <label>Port:</label>
-            <input type="text" class="form-control" name="port" value="{{ config['port'] }}">
+            <label for="port">Port</label>
+            <input type="text" class="form-control" id="port" name="port" value="{{ config.port }}">
         </div>
         <div class="form-group">
-            <label>Username:</label>
-            <input type="text" class="form-control" name="username" value="{{ config['username'] }}">
+            <label for="username">Username</label>
+            <input type="text" class="form-control" id="username" name="username" value="{{ config.username }}">
         </div>
         <div class="form-group">
-            <label>Password:</label>
-            <input type="password" class="form-control" name="password" value="{{ config['password'] }}">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" name="password" value="{{ config.password }}">
         </div>
         <div class="form-group">
-            <label>Watch Directory (on Raspberry Pi):</label>
-            <input type="text" class="form-control" name="watch_directory" value="{{ config['watch_directory'] }}">
+            <label for="watch_directory">Watch Directory</label>
+            <input type="text" class="form-control" id="watch_directory" name="watch_directory" value="{{ config.watch_directory }}">
         </div>
         <div class="form-group">
-            <label>File Format (e.g., .dat):</label>
-            <input type="text" class="form-control" name="file_format" value="{{ config['file_format'] }}">
+            <label for="ftp_target_directory">FTP Target Directory</label>
+            <input type="text" class="form-control" id="ftp_target_directory" name="ftp_target_directory" value="{{ config.ftp_target_directory }}">
         </div>
         <div class="form-group">
-            <label>FTP Target Directory:</label>
-            <input type="text" class="form-control" name="ftp_target_directory" value="{{ config['ftp_target_directory'] }}">
+            <label for="file_format">File Format</label>
+            <input type="text" class="form-control" id="file_format" name="file_format" value="{{ config.file_format }}">
         </div>
         <button type="submit" class="btn btn-primary">Save Configuration</button>
     </form>
-
-    <form action="/connect" method="post" class="mt-3">
-        <button type="submit" class="btn btn-info">Connect to FTP Server</button>
-    </form>
-
-    <form action="/start" method="post" class="mt-3">
+    <form method="post" action="{{ url_for('ftp.start_transfer') }}" class="mt-3">
         <button type="submit" class="btn btn-success">Start Service</button>
     </form>
-
-    <form action="/stop" method="post" class="mt-3">
+    <form method="post" action="{{ url_for('ftp.stop_transfer') }}" class="mt-3">
         <button type="submit" class="btn btn-danger">Stop Service</button>
     </form>
+</div>
 {% endblock %}

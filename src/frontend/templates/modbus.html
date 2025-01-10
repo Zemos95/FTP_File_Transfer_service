@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Modbus Server Configuration{% endblock %}
+
+{% block content %}
+<<div class="container mt-4">
+    <h1>Modbus Server Configuration</h1>
+    <form method="post" action="{{ url_for('modbus.configure') }}">
+        <!-- Platzhalter für Modbus-Konfiguration -->
+        <div class="form-group">
+            <label for="modbus_setting">Modbus Setting</label>
+            <input type="text" class="form-control" id="modbus_setting" name="modbus_setting">
+        </div>
+        <button type="submit" class="btn btn-primary">Save Configuration</button>
+    </form>
+</div>>
+{% endblock %}

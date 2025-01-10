@@ -3,56 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}File Transfer Service{% endblock %}</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/css/styles.css">
+    <title>{% block title %}LPI Monitoring{% endblock %}</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <!-- Optional: Font Awesome für Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a class="navbar-brand" href="#">File Transfer Service</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{ url_for('home.home') }}">LPI Monitoring</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/ftp/configuration">FTP Configuration</a>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Configuration <i class="fa fa-caret-down ms-1"></i>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a class="dropdown-item" href="/ftp/configuration">FTP Client</a></li>
+                            <li><a class="dropdown-item" href="/modbus/configuration">Modbus Server</a></li>
+                        </ul>
                     </li>
                 </ul>
-                <span class="navbar-text mr-3">
-                    Server Status: <span id="server_status" class="status-indicator"></span>
+                <span class="navbar-text me-3">
+                    Server Status: <span id="server_status" class="status-indicator">Loading...</span>
                 </span>
-                <span class="navbar-text mr-3">
-                    Login Status: <span id="login_status" class="status-indicator"></span>
+                <span class="navbar-text me-3">
+                    Login Status: 
+                    {% if current_user.is_authenticated %}
+                        <span class="text-success">Logged In</span>
+                    {% else %}
+                        <span class="text-danger">Logged Out</span>
+                    {% endif %}
                 </span>
-                <form action="/logout" method="post" class="form-inline">
-                    <button type="submit" class="btn btn-outline-light">Logout</button>
-                </form>
+                {% if current_user.is_authenticated %}
+                    <form action="{{ url_for('login.logout') }}" method="post" class="d-flex">
+                        <button type="submit" class="btn btn-outline-light">Logout</button>
+                    </form>
+                {% endif %}
             </div>
-        </nav>
-    </header>
+        </div>
+    </nav>
     <main class="container mt-4">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
                     <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
                         {{ message }}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 {% endfor %}
             {% endif %}
         {% endwith %}
         {% block content %}{% endblock %}
     </main>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Bootstrap 5 JS Bundle (inkl. Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         async function updateServerStatus() {
             try {
@@ -60,41 +70,25 @@
                 const data = await response.json();
                 const statusIndicator = document.getElementById('server_status');
                 if (data.server_status === 'online') {
-                    statusIndicator.classList.add('status-online');
-                    statusIndicator.classList.remove('status-offline');
+                    statusIndicator.classList.add('text-success');
+                    statusIndicator.classList.remove('text-danger');
+                    statusIndicator.textContent = 'Online';
                 } else {
-                    statusIndicator.classList.add('status-offline');
-                    statusIndicator.classList.remove('status-online');
+                    statusIndicator.classList.add('text-danger');
+                    statusIndicator.classList.remove('text-success');
+                    statusIndicator.textContent = 'Offline';
                 }
             } catch (error) {
                 console.error("Error fetching server status:", error);
+                const statusIndicator = document.getElementById('server_status');
+                statusIndicator.classList.add('text-danger');
+                statusIndicator.textContent = 'Offline';
             }
         }
 
-        async function updateLoginStatus() {
-            try {
-                const response = await fetch('/api/login_status');
-                const data = await response.json();
-                const statusIndicator = document.getElementById('login_status');
-                if (data.login_status === 'success') {
-                    statusIndicator.classList.add('status-online');
-                    statusIndicator.classList.remove('status-offline');
-                } else {
-                    statusIndicator.classList.add('status-offline');
-                    statusIndicator.classList.remove('status-online');
-                }
-            } catch (error) {
-                console.error("Error fetching login status:", error);
-            }
-        }
-
-        // Update the server and login status periodically
-        setInterval(updateServerStatus, 5000); // Every 5 seconds
-        setInterval(updateLoginStatus, 5000); // Every 5 seconds
-        window.onload = function() {
-            updateServerStatus();
-            updateLoginStatus();
-        };
+        // Initialer Check und periodische Aktualisierung
+        updateServerStatus();
+        setInterval(updateServerStatus, 5000); // Alle 5 Sekunden
     </script>
 </body>
 </html>

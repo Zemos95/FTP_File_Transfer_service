@@ -1,14 +1,69 @@
 {% extends "base.html" %}
 
-{% block title %}Home - File Transfer Service{% endblock %}
+{% block title %}Home{% endblock %}
 
 {% block content %}
-    <h1>File Transfer Service - Status</h1>
-    <div class="status">
-        <p><strong>Server Status:</strong> <span id="server_status_text">Loading...</span></p>
-        <p><strong>Service Running:</strong> <span id="observer_running">Loading...</span></p>
-        <p><strong>Files Transferred:</strong> <span id="transferred_files">Loading...</span></p>
-        <p><strong>Upload Speed:</strong> <span id="upload_speed">Loading...</span></p>
-        <p><strong>Download Speed:</strong> <span id="download_speed">Loading...</span></p>
+<div class="container mt-4">
+    <h1>Home</h1>
+    <div class="card">
+        <div class="card-header">
+            FTP Service
+        </div>
+        <div class="card-body">
+            <p>Server Status: <span id="ftp_server_status" class="status-indicator"></span></p>
+            <p>Login Status: <span id="ftp_login_status" class="status-indicator"></span></p>
+        </div>
     </div>
+    <div class="card mt-4">
+        <div class="card-header">
+            Modbus Service
+        </div>
+        <div class="card-body">
+            <p>Server Status: <span id="modbus_server_status" class="status-indicator"></span></p>
+            <p>Login Status: <span id="modbus_login_status" class="status-indicator"></span></p>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    async function updateFTPStatus() {
+        try {
+            const response = await fetch('/api/status');
+            const data = await response.json();
+            const serverStatus = document.getElementById('ftp_server_status');
+            const loginStatus = document.getElementById('ftp_login_status');
+            if (data.server_status === 'online') {
+                serverStatus.classList.add('status-online');
+                serverStatus.classList.remove('status-offline');
+            } else {
+                serverStatus.classList.add('status-offline');
+                serverStatus.classList.remove('status-online');
+            }
+            if (data.login_status === 'success') {
+                loginStatus.classList.add('status-online');
+                loginStatus.classList.remove('status-offline');
+            } else {
+                loginStatus.classList.add('status-offline');
+                loginStatus.classList.remove('status-online');
+            }
+        } catch (error) {
+            console.error("Error fetching FTP status:", error);
+        }
+    }
+
+    async function updateModbusStatus() {
+        // Platzhalter für Modbus-Statusaktualisierung
+        console.log("Updating Modbus status...");
+    }
+
+    // Update the FTP and Modbus status periodically
+    setInterval(updateFTPStatus, 5000); // Every 5 seconds
+    setInterval(updateModbusStatus, 5000); // Every 5 seconds
+    window.onload = function() {
+        updateFTPStatus();
+        updateModbusStatus();
+    };
+</script>
 {% endblock %}
